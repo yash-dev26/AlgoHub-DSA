@@ -5,7 +5,7 @@ function pingProblemController(req, res){
     return res.json({"message": "Pong from Problem Controller"});
 }
 
-function addProblem(req, res){
+function addProblem(req, res, next){
     try{
         throw new NotImplementedError('addProblem');
     } catch(err){
@@ -13,7 +13,7 @@ function addProblem(req, res){
     }
 }
 
-function getProblem(req, res){
+function getProblem(req, res, next){
     try{
         throw new NotImplementedError('getProblem');
     } catch(err){
@@ -21,7 +21,7 @@ function getProblem(req, res){
     }
 }
 
-function getProblems(req, res){
+function getProblems(req, res, next){
     try{
         throw new NotImplementedError('getProblems');
     } catch(err){
@@ -29,7 +29,7 @@ function getProblems(req, res){
     }
 }
 
-function deleteProblem(req, res){
+function deleteProblem(req, res, next){
     try{
         throw new NotImplementedError('deleteProblem');
     } catch(err){
@@ -37,7 +37,7 @@ function deleteProblem(req, res){
     }
 }
 
-function updateProblem(req, res){
+function updateProblem(req, res, next){
     try{
         throw new NotImplementedError('updateProblem');
     } catch(err){
