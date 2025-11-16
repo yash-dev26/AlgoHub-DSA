@@ -7,20 +7,38 @@ class ProblemService {
     }
 
     async createProblem(problemData){
-        try{
-            console.log("problem data is", problemData);
-            problemData.description = sanitizeMarkdown(problemData.description);
 
-            const problem = await this.problemRepository.createProblem(problemData);
+        problemData.description = sanitizeMarkdown(problemData.description);
 
+        const problem = await this.problemRepository.createProblem(problemData);
+        
+        return problem;
+    
+    }
 
-            console.log("problem created is", problem);
-            
-            return problem;
-        } catch(err){
-            console.log(err);
-            throw(err);
-        }
+    async getAllProblems(){
+
+        const problems = await this.problemRepository.getAllProblems();
+        return problems;
+        
+    }
+
+    async getProblem(id){
+
+        const problem = await this.problemRepository.getProblem(id);
+        return problem;
+
+    }
+
+    async deleteProblem(id){
+        await this.problemRepository.deleteProblem(id);
+        return;
+    }
+
+    async updateProblem(id, updateData){
+        const problem = await this.problemRepository.updateProblem(id, updateData);
+        return problem;
+
     }
 }
 
