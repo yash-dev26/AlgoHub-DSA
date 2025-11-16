@@ -1,7 +1,6 @@
 const express = require('express');
 
 const { problemController } = require('../../controllers');
-const { GetProblem } = require('../../controllers/problem.controller');
 
 const problemsRouter = express.Router();
 
