@@ -6,12 +6,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "tsc -w",
     "build": "tsc",
+    "prebuild": "npm run lint:fix",
     "prestart": "npm run build",
     "start": "nodemon ./dist/index.js",
-    "dev": "concurrently --kill-others --raw \"npm run watch\" \"npm run start\"",
+    "dev": "concurrently \"npm run watch\" \"nodemon ./dist/index.js\"",
     "lint": "eslint \"src/**/*.{ts,js}\"",
     "lint:fix": "eslint \"src/**/*.{ts,js}\" --fix",
-    "format": "prettier --write \"src/**/*.{ts,js,json,md}\""
+    "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,7 @@
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
     "nodemon": "^3.1.11",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
