@@ -2,7 +2,11 @@ const express = require('express');
 const bodyparser = require('body-parser');
 
 const { PORT} = require('./config/server.config');
+const {errorHandler} = require('./utils');
 const apiRouter = require('./routes');
+const connectToDatabase = require('./config/db.config');
+const logger = require('./config/logger.config');
+
 
 const app = express();
 
@@ -16,6 +20,16 @@ app.get('/ping', (req, res) => {
     return res.json({ message: 'Pong' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);   
+app.use(errorHandler);
+
+app.listen(PORT, async () => {
+    logger.info(`Server is starting on port ${PORT}`);
+    try{
+        await connectToDatabase();
+        logger.info('Connected to the database');
+    } catch(err){
+        logger.error('Database connection failed', err);
+        // rethrow so the process can crash if DB is critical
+        throw err;
+    }
 });
