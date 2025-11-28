@@ -1,5 +1,6 @@
 import { Job } from 'bullmq';
 import { IJob } from '../types/bullmqJob.type';
+import logger from '../config/winston.config';
 
 export default class SampleJob implements IJob {
   name: string;
@@ -12,13 +13,13 @@ export default class SampleJob implements IJob {
 
   handler = (job?: Job): void => {
     if (job) {
-      console.log(`Handling job: ${job.name}, with id: ${job.id} and with payload:`, job.data);
+      logger.info(`Handling job: ${job.name}, id: ${job.id}, payload: ${JSON.stringify(job.data)}`);
     }
   };
 
   failed = (job?: Job): void => {
     if (job) {
-      console.log(`Job ${job.name} failed. Job details:`, job);
+      logger.error(`Job ${job.name} failed. Job details: ${JSON.stringify(job)}`);
     }
   };
 }
