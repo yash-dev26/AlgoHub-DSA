@@ -3,14 +3,15 @@ import serverConfig from './config/server.config';
 import apirouter from './routes';
 import SampleProducer from './producer/Sample.producer';
 import SampleWorker from './consumer/sample.consumer';
+import logger from './config/winston.config';
 
 const app: Express = express();
 
 app.use('/api', apirouter);
 
 app.listen(serverConfig.PORT, () => {
-  console.log(`Server is running on port ${serverConfig.PORT}`);
-  console.log('Hello, AlgoHub Evaluation Service!');
+  logger.info(`Server is running on port ${serverConfig.PORT}`);
+  logger.info('Hello, AlgoHub Evaluation Service!');
 
   SampleWorker('SampleQueue');
 
