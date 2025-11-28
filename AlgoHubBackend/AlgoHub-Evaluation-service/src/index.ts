@@ -4,14 +4,16 @@ import apirouter from './routes';
 import SampleProducer from './producer/Sample.producer';
 import SampleWorker from './consumer/sample.consumer';
 import logger from './config/winston.config';
+import bullAdapter from './config/bullBoard.config';
 
 const app: Express = express();
 
 app.use('/api', apirouter);
+app.use('/ui', bullAdapter.getRouter());
 
 app.listen(serverConfig.PORT, () => {
   logger.info(`Server is running on port ${serverConfig.PORT}`);
-  logger.info('Hello, AlgoHub Evaluation Service!');
+  logger.info(`bull-board UI available at http://localhost:${serverConfig.PORT}/ui`);
 
   SampleWorker('SampleQueue');
 
