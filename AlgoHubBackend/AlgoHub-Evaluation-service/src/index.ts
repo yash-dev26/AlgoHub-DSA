@@ -1,12 +1,17 @@
 import express, { Express } from 'express';
 import serverConfig from './config/server.config';
 import apirouter from './routes';
-import SampleProducer from './producer/Sample.producer';
-import SampleWorker from './consumer/sample.consumer';
+// import SampleProducer from './producer/Sample.producer';
+// import SampleWorker from './consumer/sample.consumer';
 import logger from './config/winston.config';
 import bullAdapter from './config/bullBoard.config';
+import bodyParser from 'body-parser';
 
 const app: Express = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.text());
 
 app.use('/api', apirouter);
 app.use('/ui', bullAdapter.getRouter());
@@ -15,12 +20,12 @@ app.listen(serverConfig.PORT, () => {
   logger.info(`Server is running on port ${serverConfig.PORT}`);
   logger.info(`bull-board UI available at http://localhost:${serverConfig.PORT}/ui`);
 
-  SampleWorker('SampleQueue');
+  // SampleWorker('SampleQueue');
 
-  SampleProducer('SampleJob', {
-    name: 'TestPayload',
-    value: 42,
-    location: 'TestLocation',
-    language: 'js',
-  });
+  // SampleProducer('SampleJob', {
+  //   name: 'TestPayload',
+  //   value: 42,
+  //   location: 'TestLocation',
+  //   language: 'js',
+  // });
 });
