@@ -1,11 +1,6 @@
 import { z } from 'zod';
 
-export interface AddSubmissionDTO {
-  userID: string;
-  problemID: string;
-  code: string;
-  language: string;
-}
+export type AddSubmissionDTO = z.infer<typeof AddSubmissionZodSchema>;
 
 export const AddSubmissionZodSchema = z.object({
   userID: z.string(),

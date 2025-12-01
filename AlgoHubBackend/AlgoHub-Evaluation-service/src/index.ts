@@ -6,6 +6,7 @@ import apirouter from './routes';
 import logger from './config/winston.config';
 import bullAdapter from './config/bullBoard.config';
 import bodyParser from 'body-parser';
+import runPythonCode from './container/python.container';
 
 const app: Express = express();
 
@@ -28,4 +29,10 @@ app.listen(serverConfig.PORT, () => {
   //   location: 'TestLocation',
   //   language: 'js',
   // });
+  const code = `n = input()
+print('value of x is', n)
+for i in range(int(n)):
+  print(i) 
+`;
+  runPythonCode(code, { input: '6', output: '' });
 });

@@ -1,6 +1,6 @@
 import express from 'express';
 import { createSubmission } from '../../controller/submission.controller';
-import { validate } from '../../validator/createSubmission.validator';
+import { validate } from '../../validator/zod.validator';
 import { AddSubmissionZodSchema } from '../../DTOs/addSubmission.dto';
 const submissionRouter = express.Router();
 
