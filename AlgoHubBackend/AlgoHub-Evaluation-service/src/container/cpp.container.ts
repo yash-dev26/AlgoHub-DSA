@@ -1,28 +1,29 @@
 import createContainer from './container-factory';
 import { TestCase } from '../types/testcases.type';
-import { PYTHON_IMAGE } from '../utils/constants';
+import { CPP_IMAGE } from '../utils/constants';
 import logger from '../config/winston.config';
 import decodeBufferStream from '../utils/bufferDecoder';
 import pullImage from '../utils/dockerImgPull';
 
-async function runPythonCode(code: string, input: TestCase) {
+async function runCppCode(code: string, input: TestCase) {
   const rawBuffer: Buffer[] = [];
-  await pullImage(PYTHON_IMAGE);
-  const pythonDockerContainer = await createContainer(PYTHON_IMAGE, [
+  await pullImage(CPP_IMAGE);
+  const cppDockerContainer = await createContainer(CPP_IMAGE, [
     '/bin/sh', // using shell to run multiple commands because we are relying on shell features like piping
     '-c', // -c allows us to pass a string of commands to be executed by the shell
-    `
-    cat <<'EOF' > script.py
+    `apk add --no-cache -q build-base coreutils &&  
+    cat <<'EOF' > Main.cpp
 ${code}
 EOF
-    echo "${input.input}" | python3 script.py
+    g++ Main.cpp -o Main &&
+    echo "${input.input}" | stdbuf -oL -eL ./Main
   `,
   ]);
 
-  await pythonDockerContainer.start(); //booting up container
-  logger.info('Python Docker container started.');
+  await cppDockerContainer.start(); //booting up container
+  logger.info('C++ Docker container started.');
 
-  const loggerStream = pythonDockerContainer.logs({
+  const loggerStream = cppDockerContainer.logs({
     stdout: true,
     stderr: true,
     timestamps: false,
@@ -35,19 +36,19 @@ EOF
   });
 
   (await loggerStream).on('end', async () => {
-    logger.info('Python Docker container logs stream ended.');
+    logger.info('C++ Docker container logs stream ended.');
     const completeBuffer = Buffer.concat(rawBuffer); // concatenate all chunks into a single buffer
     logger.info(`Raw buffer length: ${completeBuffer.length}`);
 
+    // rawBuffer is of no use here, we gotta decode it to string
     // Decoding the buffer stream to get stdout and stderr
     const decodedStream = decodeBufferStream(completeBuffer);
     logger.info(`Decoded stdout: ${decodedStream.stdout}`);
     logger.info(`Decoded stderr: ${decodedStream.stderr}`);
 
-    await pythonDockerContainer.remove({ force: true }); //cleaning up the container
-    logger.info('Python Docker container removed.');
+    await cppDockerContainer.remove(); //cleaning up the container
+    logger.info('C++ Docker container removed.');
   });
-  // rawBuffer is of no use here, we gotta decode it to string
 }
 
-export default runPythonCode;
+export default runCppCode;
