@@ -5,7 +5,7 @@ import logger from '../config/winston.config';
 import decodeBufferStream from '../utils/bufferDecoder';
 import pullImage from '../utils/dockerImgPull';
 
-async function runJavaCode(code: string, input: TestCase) {
+async function runJavaCode(code: string, input?: TestCase) {
   const rawBuffer: Buffer[] = [];
   await pullImage(JAVA_IMAGE);
   const javaDockerContainer = await createContainer(JAVA_IMAGE, [
@@ -16,7 +16,7 @@ async function runJavaCode(code: string, input: TestCase) {
 ${code}
 EOF
     javac Main.java &&
-    echo "${input.input}" | java Main
+    echo "${input?.input}" | java Main
   `,
   ]);
 

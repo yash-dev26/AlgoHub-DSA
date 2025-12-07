@@ -5,7 +5,7 @@ import logger from '../config/winston.config';
 import decodeBufferStream from '../utils/bufferDecoder';
 import pullImage from '../utils/dockerImgPull';
 
-async function runCppCode(code: string, input: TestCase) {
+async function runCppCode(code: string, input?: TestCase) {
   const rawBuffer: Buffer[] = [];
   await pullImage(CPP_IMAGE);
   const cppDockerContainer = await createContainer(CPP_IMAGE, [
@@ -16,12 +16,12 @@ async function runCppCode(code: string, input: TestCase) {
 ${code}
 EOF
     g++ Main.cpp -o Main &&
-    echo "${input.input}" | stdbuf -oL -eL ./Main
+    echo " ${JSON.stringify(input)}" | stdbuf -oL -eL ./Main
   `,
   ]);
 
   await cppDockerContainer.start(); //booting up container
-  logger.info('C++ Docker container started.');
+  logger.info('C++ Docker container started.', { source: 'container/cpp.container.ts' });
 
   const loggerStream = cppDockerContainer.logs({
     stdout: true,
@@ -36,18 +36,26 @@ EOF
   });
 
   (await loggerStream).on('end', async () => {
-    logger.info('C++ Docker container logs stream ended.');
+    logger.info('C++ Docker container logs stream ended.', {
+      source: 'container/cpp.container.ts',
+    });
     const completeBuffer = Buffer.concat(rawBuffer); // concatenate all chunks into a single buffer
-    logger.info(`Raw buffer length: ${completeBuffer.length}`);
+    logger.info(`Raw buffer length: ${completeBuffer.length}`, {
+      source: 'container/cpp.container.ts',
+    });
 
     // rawBuffer is of no use here, we gotta decode it to string
     // Decoding the buffer stream to get stdout and stderr
     const decodedStream = decodeBufferStream(completeBuffer);
-    logger.info(`Decoded stdout: ${decodedStream.stdout}`);
-    logger.info(`Decoded stderr: ${decodedStream.stderr}`);
+    logger.info(`Decoded stdout: ${decodedStream.stdout}`, {
+      source: 'container/cpp.container.ts',
+    });
+    logger.info(`Decoded stderr: ${decodedStream.stderr}`, {
+      source: 'container/cpp.container.ts',
+    });
 
     await cppDockerContainer.remove(); //cleaning up the container
-    logger.info('C++ Docker container removed.');
+    logger.info('C++ Docker container removed.', { source: 'container/cpp.container.ts' });
   });
 }
 

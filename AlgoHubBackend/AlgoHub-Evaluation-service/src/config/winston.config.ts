@@ -8,7 +8,11 @@ allowedTransports.push(
     format: winston.format.combine(
       winston.format.colorize({ all: true }),
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-      winston.format.printf((info) => `${info.timestamp} [${info.level}]: ${info.message}`),
+      // include optional source/file metadata when present
+      winston.format.printf(
+        (info) =>
+          `${info.timestamp} [${info.level}]${info.source ? ` [${info.source}]` : ''}: ${info.message}`,
+      ),
     ),
   }),
 );
@@ -25,7 +29,10 @@ allowedTransports.push(
 const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    winston.format.printf((info) => `${info.timestamp} [${info.level}]: ${info.message}`),
+    winston.format.printf(
+      (info) =>
+        `${info.timestamp} [${info.level}]${info.source ? ` [${info.source}]` : ''}: ${info.message}`,
+    ),
   ),
   transports: allowedTransports,
 });

@@ -10,7 +10,7 @@ export const validate =
       });
       next();
     } catch (error) {
-      logger.error('Validation error:', error);
+      logger.error(`Validation error: ${String(error)}`, { source: 'validator/zod.validator.ts' });
       return res.status(400).json({
         success: false,
         error: error,

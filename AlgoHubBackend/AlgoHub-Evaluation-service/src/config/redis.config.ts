@@ -12,9 +12,17 @@ const redisConfig = {
 
 const redisClient = new Redis(redisConfig);
 
-redisClient.on('connect', () => logger.info('Connected to Redis'));
-redisClient.on('ready', () => logger.info('Redis client ready'));
-redisClient.on('error', (err) => logger.error(`Redis error: ${String(err)}`));
-redisClient.on('close', () => logger.warn('Redis connection closed'));
+redisClient.on('connect', () =>
+  logger.info('Connected to Redis', { source: 'config/redis.config.ts' }),
+);
+redisClient.on('ready', () =>
+  logger.info('Redis client ready', { source: 'config/redis.config.ts' }),
+);
+redisClient.on('error', (err) =>
+  logger.error(`Redis error: ${String(err)}`, { source: 'config/redis.config.ts' }),
+);
+redisClient.on('close', () =>
+  logger.warn('Redis connection closed', { source: 'config/redis.config.ts' }),
+);
 
 export default redisClient;

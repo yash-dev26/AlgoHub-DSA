@@ -6,6 +6,6 @@ const apirouter = express.Router();
 
 apirouter.use('/v1', v1router);
 
-logger.info('API router mounted: /v1');
+logger.info('API router mounted: /v1', { source: 'routes/index.ts' });
 
 export default apirouter;

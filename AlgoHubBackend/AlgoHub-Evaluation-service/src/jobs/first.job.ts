@@ -13,13 +13,18 @@ export default class SampleJob implements IJob {
 
   handler = (job?: Job): void => {
     if (job) {
-      logger.info(`Handling job: ${job.name}, id: ${job.id}, payload: ${JSON.stringify(job.data)}`);
+      logger.info(
+        `Handling job: ${job.name}, id: ${job.id}, payload: ${JSON.stringify(job.data)}`,
+        { source: 'jobs/first.job.ts' },
+      );
     }
   };
 
   failed = (job?: Job): void => {
     if (job) {
-      logger.error(`Job ${job.name} failed. Job details: ${JSON.stringify(job)}`);
+      logger.error(`Job ${job.name} failed. Job details: ${JSON.stringify(job)}`, {
+        source: 'jobs/first.job.ts',
+      });
     }
   };
 }
