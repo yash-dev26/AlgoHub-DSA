@@ -1,10 +1,41 @@
+import Layout from "./components/layout";
+import Description from "./pages/problemPage";
 
 const App = () => {
+
+  const AIgeneratedMD = `# 🧠 Project Name
+
+Short description of what this project does.
+
+![Banner](https://www.chillbilldill.com/content/images/2023/08/weirdstockphoto5-1.jpg)
+
+## ✨ Features
+- Fast
+- Scalable
+- Clean architecture
+
+## 🧰 Tech Stack
+- Node.js
+- Express
+- MongoDB
+
+## ⚙️ Setup
+\`\`\`bash
+git clone https://github.com/user/repo.git
+cd repo
+npm install
+npm run dev
+\`\`\`
+`;
+
+
   return (
     <div>
-      <h1 className="text-3xl bg-amber-600 font-bold underline">
-        Hello world!
-      </h1>
+      <Layout>
+        <div className="mt-5 p-4 border rounded">
+          <Description text={AIgeneratedMD}/>
+        </div>
+      </Layout>
     </div>
   )
 }
