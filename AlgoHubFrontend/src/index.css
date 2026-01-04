@@ -16,5 +16,33 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.markdownViewer h1 { font-size: 2rem; font-weight: 700; }
+.markdownViewer h2 { font-size: 1.5rem; font-weight: 600; }
+.markdownViewer h3 { font-size: 1.25rem; font-weight: 600; }
+.markdownViewer h4 { font-size: 1.125rem; font-weight: 600; }
+.markdownViewer ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
 
+.markdownViewer ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+.markdownViewer li {
+  margin: 0.25rem 0;
+}
+.markdownViewer code {
+  background-color: rgba(27, 31, 35, 0.05);
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  font-size: 85%;
+}
+.markdownViewer img{
+  max-width: 60%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
 

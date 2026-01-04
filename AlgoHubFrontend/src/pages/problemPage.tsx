@@ -6,14 +6,16 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 
+import DOMPurify from "dompurify";
 import * as React from "react";
 import { useState } from 'react';
 import AceEditor from 'react-ace';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 
 function Description({ text }: { text: string }) {
-  const sanitizedText = text;
-
+  const sanitizedText = DOMPurify.sanitize(text);
   const [activeTab, setActiveTab] = useState('statement');
   const [leftWidth, setLeftWidth] = useState(50); // Controls split layout
   const [isDragging, setIsDragging] = useState(false); // Track dragging state - Prevents resizing when mouse isn’t pressed
@@ -71,8 +73,9 @@ function Description({ text }: { text: string }) {
 
       </div>
 
-      <div className='markdownViewer p-6 prose prose-slate max-w-none'>
-        <ReactMarkdown>
+      <div className='markdownViewer p-6 max-w-none'>
+
+        <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
           {sanitizedText}
         </ReactMarkdown>
       </div>

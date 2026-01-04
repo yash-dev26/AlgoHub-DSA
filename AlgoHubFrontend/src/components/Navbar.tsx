@@ -3,7 +3,7 @@ function Navbar() {
     <div className="
       navbar bg-base-100/80 backdrop-blur
       border-b border-base-300
-      px-6 top-0 z-50
+      px-6 z-50
     ">
       <div className="navbar-start">
         <label htmlFor="app-drawer" className="btn btn-ghost btn-circle">
@@ -85,7 +85,7 @@ function Navbar() {
               </a>
             </li>
             <li><a>Settings</a></li>
-            <li className="text-error">
+            <li className="text-error"> {/* red colour - destructive action */}
               <a>Logout</a>
             </li>
           </ul>

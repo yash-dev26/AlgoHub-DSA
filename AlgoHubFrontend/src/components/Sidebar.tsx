@@ -1,4 +1,6 @@
-function SideBar() {
+{/* sit beside .drawer-content inside layout or css breaks */}
+
+function SideBar() { 
   return (
     <div className="drawer-side">
       <label
