@@ -73,9 +73,9 @@ function Description({ text }: { text: string }) {
 
       </div>
 
-      <div className='markdownViewer p-6 max-w-none'>
+      <div className='prose prose-invert p-6 max-w-none'>
 
-        <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+        <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]} >
           {sanitizedText}
         </ReactMarkdown>
       </div>

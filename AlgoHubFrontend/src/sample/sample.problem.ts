@@ -1,14 +1,10 @@
 export default {
 
   problemStatement: `# Problem: Energy-Constrained Robot Walk
-<br/>
 
 ---
-<br/>
 
 ## Problem Description
-
-<br/>
 
 A robot is placed on a **1D number line** at position \`start\`.
 
@@ -20,32 +16,23 @@ On each move, it can choose **one of the following actions**:
   - Move **right by 1** (costs \`1\` unit of energy)
   - **stay** at the same position (costs \`0\` energy)
 
-<br/>
-
 ![image](https://i.pinimg.com/736x/21/2e/5f/212e5f17978df344781061ab9f89b36d.jpg)
-
-<br/>
 
 The robot starts with **\`E\` units of energy**.
 
-If at any point the robot’s energy becomes **negative**, that movement sequence is considered **invalid**.
-
-<br/>
+If at any point the robot's energy becomes **negative**, that movement sequence is considered **invalid**.
 
 ---
-<br/>
 
 ## Task
-<br/>
 
 Return the **total number of valid movement sequences** of length \`K\` such that:
 
-- The robot’s position is **never less than \`0\`**
-- The robot’s energy is **never negative**
+- The robot's position is **never less than \`0\`**
+- The robot's energy is **never negative**
 - The robot completes **exactly \`K\` moves**
-<br/>
+
 ---
-<br/>
 
 ## Input/Output 
 <details>
@@ -60,10 +47,8 @@ Return the **total number of valid movement sequences** of length \`K\` such tha
 </details>
 
 ---
-<br/>
 
 ## Example
-<br/>
 
 Input: \`start = 1, K = 2, E = 2\`  
 Output: \`6\`

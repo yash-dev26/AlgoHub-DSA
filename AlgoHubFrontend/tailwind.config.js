@@ -1,5 +1,10 @@
 import daisyui from "daisyui";
+import typography from "@tailwindcss/typography";
 
 export default {
-  plugins: [daisyui],
-}
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  plugins: [daisyui, typography],
+  daisyui: {
+    themes: ["light", "dark"],
+  },
+};
