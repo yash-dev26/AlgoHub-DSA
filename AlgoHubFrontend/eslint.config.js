@@ -22,6 +22,9 @@ export default defineConfig([
     rules: {
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+      'functional/no-expression-statements': 'off',
+      'functional/no-pure-functions': 'off',
+
     },
     languageOptions: {
       ecmaVersion: 2020,

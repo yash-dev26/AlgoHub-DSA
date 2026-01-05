@@ -17,3 +17,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@layer
+  btn-primary {
+    .btn-primary {
+      @apply shadow-none bg-violet-500 hover:bg-violet-700 border-purple-700 active:bg-violet-900;
+    }
+  }
+
