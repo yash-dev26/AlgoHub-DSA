@@ -1,11 +1,11 @@
 import '../types/fastifyinstance.js';
 import fp from 'fastify-plugin';
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
-import TestService from './test.service.js';
+import SubmissionService from './submission.service.js';
 
 const servicePlugin: FastifyPluginAsync = async (fastify: FastifyInstance) => {
-  fastify.decorate('testService', new TestService());
+  fastify.decorate('submissionService', new SubmissionService(fastify.submissionRepository));
 
-}; // now every route can access app.testService
+}; // now every route can access app.submissionService
 
 export default fp(servicePlugin);

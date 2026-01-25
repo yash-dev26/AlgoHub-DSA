@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
-import pingController from '../../../../controller/test.controller.js';
+import pingController from '../../../../controller/submission.controller.js';
 
 const pingRoute: FastifyPluginAsync = async (fastify: FastifyInstance) => {
   fastify.get('/ping', pingController);
