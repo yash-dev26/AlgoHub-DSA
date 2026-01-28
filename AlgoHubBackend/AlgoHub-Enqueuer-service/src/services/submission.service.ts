@@ -1,4 +1,5 @@
 import submissionProducer from "../producer/submission.producer.js";
+import SubmissionCreationError from "../errors/submission.error.js";
 
 class SubmissionService {
 
@@ -9,7 +10,12 @@ class SubmissionService {
   }
 
   async createSubmission(data: any){
-    const submission = this.submissionRepository.createSubmission(data);
+    const submission = await this.submissionRepository.createSubmission(data);
+
+    if(!submission){
+      throw new SubmissionCreationError('Failed to create a submission in the repository');
+    }
+
     const reply  = await submissionProducer(submission);
     console.log("Submission enqueued:", reply);
     return {queueResponse: reply, submission};

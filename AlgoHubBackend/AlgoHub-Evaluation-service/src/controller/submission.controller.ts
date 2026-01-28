@@ -1,9 +1,18 @@
 import { Request, Response } from 'express';
-import { AddSubmissionDTO } from '../DTOs/addSubmission.dto';
+import { AddSubmissionDTO, AddSubmissionZodSchema } from '../DTOs/addSubmission.dto';
 export function createSubmission(req: Request, res: Response) {
-  const SubmissionDTO = req.body as AddSubmissionDTO;
+  const validation = AddSubmissionZodSchema.safeParse(req.body);
 
-  //Add validation using zod
+  if (!validation.success) {
+    return res.status(400).json({
+      success: false,
+      error: validation.error.issues,
+      message: 'Validation failed',
+      data: null,
+    });
+  }
+
+  const SubmissionDTO: AddSubmissionDTO = validation.data;
 
   return res.json({
     success: true,

@@ -1,8 +1,8 @@
 import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
-import testRoute from './test/test.route.js';
+import submissionRoute from './submission.route.js';
 
 const v1Plugin: FastifyPluginAsync = async (fastify: FastifyInstance) => {
-  fastify.register(testRoute, { prefix: '/test' });
+  fastify.register(submissionRoute, { prefix: '/submissions' });
 };
 
 export default v1Plugin;

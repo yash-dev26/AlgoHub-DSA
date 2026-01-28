@@ -48,8 +48,8 @@ export default class SubmissionJob implements IJob {
       if (submission.language === 'CPP') {
         // Handle CPP code execution
         logger.info('Executing C++ code', { source: 'jobs/submission.job.ts' });
-        await runCppCode(submission.code, submission.input ?? undefined).then((result) => {
-          logger.info(`C++ code execution result: ${result}`, { source: 'jobs/submission.job.ts' });
+        await runCppCode(submission.code, submission.input ?? undefined).then(async (result) => {
+          await logger.info(`C++ code execution result: ${result}`, { source: 'jobs/submission.job.ts' });
         });
       }
     }

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "ace-builds": "^1.43.5",
+    "axios": "^1.13.2",
     "daisyui": "^5.5.14",
     "dompurify": "^3.3.1",
     "react": "^19.2.0",

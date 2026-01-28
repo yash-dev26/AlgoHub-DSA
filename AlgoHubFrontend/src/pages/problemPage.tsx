@@ -13,12 +13,14 @@ import "ace-builds/src-noconflict/theme-xcode";
 import "ace-builds/src-noconflict/theme-solarized_dark";
 import "ace-builds/src-noconflict/theme-solarized_light";
 
+import axios from "axios";
 import DOMPurify from "dompurify";
 import { type DragEvent, useState } from 'react';
 import AceEditor from 'react-ace';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
+
 
 function Description({ text }: { text: string }) {
   const sanitizedText = DOMPurify.sanitize(text);
@@ -28,6 +30,26 @@ function Description({ text }: { text: string }) {
   const [isDragging, setIsDragging] = useState(false); // Track dragging state - Prevents resizing when mouse isn’t pressed
   const [language, setlanguage] = useState('javascript');
   const [theme, settheme] = useState('monokai');
+  const [code, setcode] = useState('');
+
+  // Handler for submission button
+  const handleSubmission = async () => {
+
+    try {
+      console.log("Code submitted:", code);
+      console.log("Language:", language);
+      const response = await axios.post('http://localhost:3000/api/v1/submissions/', {
+        code,
+        language,
+        userId: '1',
+        problemId: '1'
+      });
+      console.log("Server response:", response);
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
+  }
+
 
   // Handlers for dragging the divider
   const startDragging = (e : DragEvent<HTMLDivElement>) => { 
@@ -104,7 +126,7 @@ function Description({ text }: { text: string }) {
       <div className="flex align-center justify-between p-2 border-b border-gray-700 mb-2">
         <div className="flex flex-wrap" >
           <button className="btn btn-primary btn-md mx-2">Run Code</button>
-          <button className="btn btn-primary btn-md mx-2 ">Submit Code</button>
+          <button className="btn btn-primary btn-md mx-2" onClick={handleSubmission}>Submit Code</button>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -134,6 +156,8 @@ function Description({ text }: { text: string }) {
         <AceEditor
           mode={language}
           theme={theme}
+          value={code}
+          onChange={(e:string) => setcode(e)}
           name='codeEditor'
           className='editor'
           style={{ width: '100%', minHeight: '50vh' }}
@@ -159,7 +183,7 @@ function Description({ text }: { text: string }) {
         </div>
          
           {(testCaseTab === 'input') ? <textarea rows={4} cols={70} className='bg-neutral text-white rounded-md resize-none'/> : <div className='w-12 h-8'></div>}
-          {(testCaseTab === 'output') ? <textarea rows={2} cols={70} className='bg-neutral text-green-500 rounded-md resize-none'/> : <div className='w-12 h-8'></div>}
+          
 
         </div>
       </div>
