@@ -2,9 +2,7 @@ import { Job } from 'bullmq';
 import { IJob } from '../types/bullmqJob.type';
 import logger from '../config/winston.config';
 import { SubmissionPayload } from '../types/submission-payload.type';
-import runPythonCode from '../container/python.container';
-import runJavaCode from '../container/java.container';
-import runCppCode from '../container/cpp.container';
+import createEvaluator from '../utils/EvaluatorFactory';
 
 export default class SubmissionJob implements IJob {
   name: string;
@@ -27,34 +25,30 @@ export default class SubmissionJob implements IJob {
       logger.info(`Processing submission for key: ${key}, language: ${submission.language}`, {
         source: 'jobs/submission.job.ts',
       });
-      if (submission.language === 'Python') {
-        // Handle Python code execution
-        logger.info('Executing Python code', { source: 'jobs/submission.job.ts' });
-        await runPythonCode(submission.code, submission.input).then((result) => {
-          logger.info(`Python code execution result: ${result}`, {
+      const codeEvaluation = await createEvaluator(
+        submission.language,
+        submission.code,
+        submission.input,
+      );
+      const evaluationResult = await codeEvaluation.evaluate(submission.code, submission.input);
+      logger.info(`Evaluation result for job ${job.id}: ${JSON.stringify(evaluationResult)}`, {
+        source: 'jobs/submission.job.ts',
+      });
+      if (evaluationResult.status === 'success') {
+        logger.info(`Job ${job.id} completed successfully. Output: ${evaluationResult.output}`, {
+          source: 'jobs/submission.job.ts',
+        });
+        console.log(evaluationResult.output);
+      } else {
+        logger.error(
+          `Job ${job.id} completed with errors. Error Output: ${evaluationResult.output}`,
+          {
             source: 'jobs/submission.job.ts',
-          });
-        });
-      }
-      if (submission.language === 'Java') {
-        // Handle Java code execution
-        logger.info('Executing Java code', { source: 'jobs/submission.job.ts' });
-        await runJavaCode(submission.code, submission.input).then((result) => {
-          logger.info(`Java code execution result: ${result}`, {
-            source: 'jobs/submission.job.ts',
-          });
-        });
-      }
-      if (submission.language === 'CPP') {
-        // Handle CPP code execution
-        logger.info('Executing C++ code', { source: 'jobs/submission.job.ts' });
-        await runCppCode(submission.code, submission.input ?? undefined).then(async (result) => {
-          await logger.info(`C++ code execution result: ${result}`, { source: 'jobs/submission.job.ts' });
-        });
+          },
+        );
       }
     }
   };
-
   failed = (job?: Job): void => {
     if (job) {
       logger.error(`Job ${job.name} failed. Job details: ${JSON.stringify(job)}`, {

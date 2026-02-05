@@ -4,51 +4,76 @@ import { JAVA_IMAGE } from '../utils/constants';
 import logger from '../config/winston.config';
 import decodeBufferStream from '../utils/bufferDecoder';
 import pullImage from '../utils/dockerImgPull';
+import EvaluatorStrategy from '../types/EvaluatorStrategy';
+import { EvaluatorResponse } from '../types/EvaluatorStrategy';
 
-async function runJavaCode(code: string, input?: TestCase) {
-  const rawBuffer: Buffer[] = [];
-  await pullImage(JAVA_IMAGE);
-  const javaDockerContainer = await createContainer(JAVA_IMAGE, [
-    '/bin/sh', // using shell to run multiple commands because we are relying on shell features like piping
-    '-c', // -c allows us to pass a string of commands to be executed by the shell
-    `
+class JavaEvaluator implements EvaluatorStrategy {
+  async evaluate(code: string, inputTestCase?: TestCase): Promise<EvaluatorResponse> {
+    const rawBuffer: Buffer[] = [];
+    await pullImage(JAVA_IMAGE);
+    const javaDockerContainer = await createContainer(JAVA_IMAGE, [
+      '/bin/sh', // using shell to run multiple commands because we are relying on shell features like piping
+      '-c', // -c allows us to pass a string of commands to be executed by the shell
+      `
     cat <<'EOF' > Main.java
 ${code}
 EOF
     javac Main.java &&
-    echo "${input?.input}" | java Main
+    echo "${inputTestCase ?? ''}" | java Main
   `,
-  ]);
+    ]);
 
-  await javaDockerContainer.start(); //booting up container
-  logger.info('Java Docker container started.');
+    await javaDockerContainer.start(); //booting up container
+    logger.info('Java Docker container started.', { source: 'container/java.container.ts' });
 
-  const loggerStream = javaDockerContainer.logs({
-    stdout: true,
-    stderr: true,
-    timestamps: false,
-    follow: true, // stream logs in real-time (not retrieving them all at once)
-  });
+    const loggerStream = javaDockerContainer.logs({
+      stdout: true,
+      stderr: true,
+      timestamps: false,
+      follow: true, // stream logs in real-time (not retrieving them all at once)
+    });
 
-  // start listening to the logs by attaching events to the stream
-  (await loggerStream).on('data', (chunk) => {
-    rawBuffer.push(chunk);
-  });
+    // start listening to the logs by attaching events to the stream
+    (await loggerStream).on('data', (chunk) => {
+      rawBuffer.push(chunk);
+    });
 
-  (await loggerStream).on('end', async () => {
-    logger.info('Java Docker container logs stream ended.');
-    const completeBuffer = Buffer.concat(rawBuffer); // concatenate all chunks into a single buffer
-    logger.info(`Raw buffer length: ${completeBuffer.length}`);
-
-    // rawBuffer is of no use here, we gotta decode it to string
-    // Decoding the buffer stream to get stdout and stderr
-    const decodedStream = decodeBufferStream(completeBuffer);
-    logger.info(`Decoded stdout: ${decodedStream.stdout}`);
-    logger.info(`Decoded stderr: ${decodedStream.stderr}`);
-
-    await javaDockerContainer.remove(); //cleaning up the container
-    logger.info('Java Docker container removed.');
-  });
+    try {
+      const result: string = await new Promise(async (res, rej) =>
+        (await loggerStream).on('end', async () => {
+          logger.info('Java Docker container logs stream ended.', {
+            source: 'container/java.container.ts',
+          });
+          const completeBuffer = Buffer.concat(rawBuffer); // concatenate all chunks into a single buffer
+          logger.info(`Raw buffer length: ${completeBuffer.length}`, {
+            source: 'container/java.container.ts',
+          });
+          // rawBuffer is of no use here, we gotta decode it to string
+          // Decoding the buffer stream to get stdout and stderr
+          const decodedStream = decodeBufferStream(completeBuffer);
+          if (decodedStream.stderr) {
+            logger.error(`Error during Java code execution: ${decodedStream.stderr}`, {
+              source: 'container/java.container.ts',
+            });
+            rej(new Error(decodedStream.stderr));
+          } else {
+            res(decodedStream.stdout);
+            logger.info(`Decoded stdout: ${decodedStream.stdout}`, {
+              source: 'container/java.container.ts',
+            });
+          }
+        }),
+      );
+      return { output: result, status: 'success' };
+    } catch (error) {
+      return { output: error as string, status: 'ERROR' };
+    } finally {
+      await javaDockerContainer.remove({ force: true }); //cleaning up the container
+      logger.info('Java Docker container removed.', {
+        source: 'container/java.container.ts',
+      });
+    }
+  }
 }
 
-export default runJavaCode;
+export default JavaEvaluator;
