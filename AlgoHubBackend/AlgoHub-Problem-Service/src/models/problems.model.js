@@ -20,6 +20,14 @@ const problemSchema = new mongoose.Schema({
             output: { type: String, required: true }
         }
     ],
+    codeStub: [
+      {
+        language: { type: String, enum: ['cpp', 'python', 'java'], required: true },
+        startStub: { type: String,},
+        endStub: { type: String,},
+        userStub: { type: String,}
+      }
+    ],
     tags: {
         type: [String],
         default: []
