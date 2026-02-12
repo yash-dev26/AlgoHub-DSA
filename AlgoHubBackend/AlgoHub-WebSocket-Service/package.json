@@ -1,0 +1,18 @@
+{
+  "name": "algohub-websocket-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1",
+    "ioredis": "^5.9.2",
+    "redis": "^5.10.0",
+    "socket.io": "^4.8.3"
+  }
+}
