@@ -22,6 +22,8 @@ export default class SubmissionJob implements IJob {
         return;
       }
       const [key, submission] = entries[0];
+      // const inputTestCase = this.payload[key].input?.input;
+      // const outputTestCase = this.payload[key].input?.output;
       logger.info(`Processing submission for key: ${key}, language: ${submission.language}`, {
         source: 'jobs/submission.job.ts',
       });

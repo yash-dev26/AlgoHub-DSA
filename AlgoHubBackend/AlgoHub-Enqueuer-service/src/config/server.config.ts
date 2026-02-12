@@ -7,4 +7,5 @@ export const SERVER_CONFIG = {
   REDIS_PORT: process.env.REDIS_PORT,
   ATLAS_DB_URL: process.env.ATLAS_DB_URL,
   NODE_ENV: process.env.NODE_ENV,
+  PROBLEM_SERVICE_URL: process.env.PROBLEM_SERVICE_URL
 }

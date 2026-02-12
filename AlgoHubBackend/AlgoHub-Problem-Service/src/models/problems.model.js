@@ -22,10 +22,10 @@ const problemSchema = new mongoose.Schema({
     ],
     codeStub: [
       {
-        language: { type: String, enum: ['cpp', 'python', 'java'], required: true },
-        startStub: { type: String,},
-        endStub: { type: String,},
-        userStub: { type: String,}
+        language: { type: String, enum: ['cpp', 'python', 'java'] },
+        startStub: { type: String },
+        endStub: { type: String },
+        userStub: { type: String }
       }
     ],
     tags: {
