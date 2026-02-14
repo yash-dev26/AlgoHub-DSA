@@ -39,8 +39,21 @@ EOF
     });
 
     try {
-      const result: string = await new Promise(async (res, rej) =>
+      const result: string = await new Promise(async (res, rej) => {
+        const timeoutId = setTimeout(() => {
+          logger.warn('Java code execution timed out. Destroying container.', {
+            source: 'container/java.container.ts',
+          });
+          javaDockerContainer.stop().then(() => {
+            logger.info('Java Docker container stopped.', {
+              source: 'container/java.container.ts',
+            });
+            rej(new Error('TLE'));
+          });
+        }, 3000); // 3 seconds time limit for code execution
+
         (await loggerStream).on('end', async () => {
+          clearTimeout(timeoutId); // clear the timeout if execution finishes within time limit
           logger.info('Java Docker container logs stream ended.', {
             source: 'container/java.container.ts',
           });
@@ -62,9 +75,13 @@ EOF
               source: 'container/java.container.ts',
             });
           }
-        }),
-      );
-      return { output: result, status: 'success' };
+        });
+      });
+      if (result.trim() === inputTestCase?.output?.trim()) {
+        return { output: result, status: 'SUCCESS' };
+      } else {
+        return { output: result, status: 'WA' };
+      }
     } catch (error) {
       return { output: error as string, status: 'ERROR' };
     } finally {

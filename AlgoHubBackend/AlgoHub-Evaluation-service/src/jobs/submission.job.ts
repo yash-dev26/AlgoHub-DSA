@@ -36,7 +36,7 @@ export default class SubmissionJob implements IJob {
       logger.info(`Evaluation result for job ${job.id}: ${JSON.stringify(evaluationResult)}`, {
         source: 'jobs/submission.job.ts',
       });
-      if (evaluationResult.status === 'success') {
+      if (evaluationResult.status === 'SUCCESS') {
         logger.info(`Job ${job.id} completed successfully. Output: ${evaluationResult.output}`, {
           source: 'jobs/submission.job.ts',
         });
