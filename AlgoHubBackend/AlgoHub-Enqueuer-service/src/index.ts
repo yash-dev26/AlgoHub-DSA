@@ -18,7 +18,7 @@ server
       process.exit(1);
     }
     await connectToDatabase();
-    evaluationWorker('evaluationQueue');
+    evaluationWorker('EvaluationQueue');
     console.info(`Server listening on port : ${SERVER_CONFIG.PORT}`);
     
   });

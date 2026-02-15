@@ -17,7 +17,7 @@ class PythonEvaluator implements EvaluatorStrategy {
     cat <<'EOF' > script.py
 ${code}
 EOF
-    echo "${inputTestCase ?? ''}" | python3 script.py
+    echo "${inputTestCase?.input ?? ''}" | python3 script.py
   `,
     ]);
 

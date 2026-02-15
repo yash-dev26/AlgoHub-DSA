@@ -14,6 +14,9 @@ export default function SubmissionWorker(queueName: string) {
       });
       try {
         if (job.name === 'SubmissionJob') {
+          logger.info(`Job data received: ${JSON.stringify(job.data)}`, {
+            source: 'consumer/submission.consumer.ts',
+          });
           const submissionJobInstance = new SubmissionJob(job.data);
           await submissionJobInstance.handler(job);
           logger.info(`Job processed successfully: ${job.id}`, {

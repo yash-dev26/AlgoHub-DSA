@@ -3,5 +3,6 @@
 
  module.exports = {
     PORT: process.env.PORT,
-    FRONTEND_URL: process.env.FRONTEND_URL
+    FRONTEND_URL: process.env.FRONTEND_URL,
+    ENQUEUE_SERVICE_URL: process.env.ENQUEUE_SERVICE_URL
  }

@@ -19,7 +19,7 @@ class JavaEvaluator implements EvaluatorStrategy {
 ${code}
 EOF
     javac Main.java &&
-    echo "${inputTestCase ?? ''}" | java Main
+    echo "${inputTestCase?.input ?? ''}" | java Main
   `,
     ]);
 

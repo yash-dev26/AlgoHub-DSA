@@ -7,14 +7,14 @@ export default function createEvaluator(
   inputTestCase?: TestCase,
 ): EvaluatorStrategy {
   if (codeLanguage === 'cpp') {
-    const { CppEvaluator } = require('../container/cpp.container');
-    return new CppEvaluator(code, inputTestCase);
+    const CppEvaluator = require('../container/cpp.container').default;
+    return new CppEvaluator();
   } else if (codeLanguage === 'java') {
-    const { JavaEvaluator } = require('../container/java.container');
-    return new JavaEvaluator(code, inputTestCase);
+    const JavaEvaluator = require('../container/java.container').default;
+    return new JavaEvaluator();
   } else if (codeLanguage === 'python') {
-    const { PythonEvaluator } = require('../container/python.container');
-    return new PythonEvaluator(code, inputTestCase);
+    const PythonEvaluator = require('../container/python.container').default;
+    return new PythonEvaluator();
   } else {
     throw new Error(`Unsupported code language: ${codeLanguage}`);
   }

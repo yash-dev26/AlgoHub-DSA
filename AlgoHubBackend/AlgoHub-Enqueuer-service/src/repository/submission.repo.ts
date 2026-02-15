@@ -8,5 +8,9 @@ class SubmissionRepository {
     const reply = await this.submissionModel.create(data);
     return reply;
   }
+  async updateSubmission(id: string, data: any){
+    const reply = await this.submissionModel.findByIdAndUpdate(id, data, {new: true});
+    return reply;
+  }
 }
 export default SubmissionRepository;

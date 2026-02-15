@@ -21,17 +21,19 @@ import ReactMarkdown from 'react-markdown';
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
+import { useSocket } from "../hooks/useSocket";
+
 
 function Description({ text }: { text: string }) {
   const sanitizedText = DOMPurify.sanitize(text);
   const [activeTab, setActiveTab] = useState('statement');
-  const [testCaseTab, setTestCaseTab] = useState('input');
   const [leftWidth, setLeftWidth] = useState(50); // Controls split layout
   const [isDragging, setIsDragging] = useState(false); // Track dragging state - Prevents resizing when mouse isn’t pressed
   const [language, setlanguage] = useState('javascript');
   const [theme, settheme] = useState('monokai');
   const [code, setcode] = useState('');
 
+  const { evaluationResult, isLoading } = useSocket();
   // Handler for submission button
   const handleSubmission = async () => {
 
@@ -42,7 +44,7 @@ function Description({ text }: { text: string }) {
         code,
         language,
         userId: '1',
-        problemId: '1'
+        problemId: '6991bbd6a59952c184ffe9b4'
       });
       console.log("Server response:", response);
     } catch (error) {
@@ -84,16 +86,6 @@ function Description({ text }: { text: string }) {
       return 'tab';
     }
   }
-
-  const setActiveTestCaseTabClass = (tabName: string) => {
-    if(testCaseTab === tabName) {
-      return 'tab tab-active';
-    } else {
-      return 'tab';
-    }
-  }
-
-
 
   return (
     <div 
@@ -173,18 +165,31 @@ function Description({ text }: { text: string }) {
 
       <div className="collapse bg-base-200 rounded-xl my-4">
         <input type="checkbox" className="peer" /> 
-        <div className="collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
-          Console
+        <div className="collapse-title bg-primary text-3xl align-middle text-center text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+          {isLoading ? 'Loading...' : (evaluationResult ? `Status: ${evaluationResult.evaluationResult.status}` : 'Results')}
         </div>
         <div className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content"> 
-        <div role="tablist" className="tabs tabs-boxed w-3/5 mb-4">
-            <a onClick={() => setTestCaseTab('input')} role="tab" className={setActiveTestCaseTabClass('input')}>Input</a>
-            <a onClick={() => setTestCaseTab('output')} role="tab" className={setActiveTestCaseTabClass('output')}>Output</a>
-        </div>
-         
-          {(testCaseTab === 'input') ? <textarea rows={4} cols={70} className='bg-neutral text-white rounded-md resize-none'/> : <div className='w-12 h-8'></div>}
-          
+          {evaluationResult ? (
+            <div className="space-y-4">
+              <div className="divider">Execution Results</div>
+              
+              <div className="bg-base-300 p-4 rounded-lg">
+                <h3 className="text-lg font-bold mb-2">Status</h3>
+                <p className={`text-xl font-bold ${evaluationResult.evaluationResult.status === 'SUCCESS' ? 'text-green-400' : 'text-red-400'}`}>
+                  {evaluationResult.evaluationResult.status}
+                </p>
+              </div>
 
+              <div className="bg-base-300 p-4 rounded-lg">
+                <h3 className="text-lg font-bold mb-2">Output</h3>
+                <pre className="bg-neutral text-white p-3 rounded overflow-auto max-h-52">
+                  {evaluationResult.evaluationResult.output || 'No output'}
+                </pre>
+              </div>
+            </div>
+          ) : (
+            <p className="text-center py-6">Submit your code to see results here</p>
+          )}
         </div>
       </div>
     </div>

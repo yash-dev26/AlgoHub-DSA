@@ -35,13 +35,21 @@ class SubmissionService {
       [submission._id]: {
         code: submission.code,
         language: submission.language,
-        testCases: problemApiResponse.data.testCases[0],
+        TestCases: problemApiResponse.data.testCases[0],
         userId: userId,
         submissionId: submission._id,
       } // for now we are sending only the first test case, this can be modified to send all test cases or a selected set of test cases
     });
     console.log("Submission enqueued:", reply);
     return {queueResponse: reply, submission};
+  }
+
+  async updateSubmission(id: string, data: any){
+    const updatedSubmission = await this.submissionRepository.updateSubmission(id, data);
+    if(!updatedSubmission){
+      throw new SubmissionCreationError(`Failed to update submission with ID ${id}`);
+    }
+    return updatedSubmission; 
   }
 }
 

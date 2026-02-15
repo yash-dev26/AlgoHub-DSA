@@ -28,11 +28,18 @@ export default class SubmissionJob implements IJob {
       logger.info(`Processing submission for key: ${key}, language: ${submission.language}`, {
         source: 'jobs/submission.job.ts',
       });
+      logger.info(`Submission code: ${submission.code}`, { source: 'jobs/submission.job.ts' });
+      logger.info(`Test cases: ${JSON.stringify(submission.TestCases)}`, {
+        source: 'jobs/submission.job.ts',
+      });
       const codeEvaluation = await createEvaluator(
         submission.language,
         submission.code,
         submission.TestCases,
       );
+      logger.info(`Created evaluator for job ${job.id} with language ${submission.language}`, {
+        source: 'jobs/submission.job.ts',
+      });
       const evaluationResult = await codeEvaluation.evaluate(submission.code, submission.TestCases);
       logger.info(`Evaluation result for job ${job.id}: ${JSON.stringify(evaluationResult)}`, {
         source: 'jobs/submission.job.ts',

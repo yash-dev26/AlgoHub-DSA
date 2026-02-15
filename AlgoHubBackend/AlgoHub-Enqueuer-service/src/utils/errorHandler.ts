@@ -1,7 +1,7 @@
-const BaseError = require("../errors/base.error");
-const { StatusCodes } = require('http-status-codes');
+import BaseError from "../errors/base.error.js";
+import { StatusCodes } from "http-status-codes";
 
-function errorHandler(error, request, reply) {
+function errorHandler(error: any, request: any, reply: any) {
     if (error instanceof BaseError) {
         reply.status(error.statusCode).send({
             success: false,

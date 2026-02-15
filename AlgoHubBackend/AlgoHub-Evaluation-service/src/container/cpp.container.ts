@@ -18,7 +18,7 @@ class CppEvaluator {
 ${code}
 EOF
     g++ Main.cpp -o Main &&
-    echo " ${JSON.stringify(inputTestCase ?? '')}" | stdbuf -oL -eL ./Main
+    echo "${inputTestCase?.input ?? ''}" | stdbuf -oL -eL ./Main
   `,
     ]);
 

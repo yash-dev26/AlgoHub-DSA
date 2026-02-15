@@ -1,5 +1,5 @@
-const BaseError = require('./base.error');
-const { StatusCodes } = require('http-status-codes')
+import BaseError from "./base.error.js";
+import { StatusCodes } from "http-status-codes";
 
 class SubmissionCreationError extends BaseError {
     constructor(details: any) {

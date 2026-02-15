@@ -1,5 +1,5 @@
-const BaseError = require('./base.error');
-const { StatusCodes } = require('http-status-codes');
+import BaseError from "./base.error.js";
+import { StatusCodes } from "http-status-codes";
 
 class InternalServerError extends BaseError {
     constructor(details: any) {
@@ -7,4 +7,4 @@ class InternalServerError extends BaseError {
     }
 }
 
-module.exports = InternalServerError;
+export default InternalServerError;

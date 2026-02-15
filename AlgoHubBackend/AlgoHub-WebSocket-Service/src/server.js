@@ -3,7 +3,7 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const redis = require("ioredis");
 const bodyParser = require("body-parser");
-const { PORT, FRONTEND_URL } = require("./config/server.config");
+const { PORT, FRONTEND_URL, ENQUEUE_SERVICE_URL } = require("./config/server.config");
 
 
 const app = express( );
@@ -14,7 +14,8 @@ app.use(bodyParser.json());
 const redisClient = new redis();
 const io = new Server(httpServer, { 
   cors: {
-    origin: FRONTEND_URL, // Adjust this to your frontend URL
+    origin: [FRONTEND_URL, ENQUEUE_SERVICE_URL],
+    // Adjust this to your frontend URL
     methods: ["GET", "POST"]
   }
 });
@@ -24,7 +25,7 @@ io.on("connection", (socket) => {
 
   socket.on("setUserId", (userId) => { // from frontend, when we emit "setUserId" with the user ID
     console.log("Setting user ID for socket " + socket.id + ": " + userId);
-    redisClient.set(socket.id, userId); // Store the mapping of socket ID to user ID in Redis cache
+    redisClient.set(userId, socket.id); // Store the mapping of user ID to socket ID in Redis cache
   });
 
 });
@@ -50,5 +51,5 @@ app.post("/senddata",  async(req, res) => {
 });
 
 httpServer.listen(PORT, () => {
-  console.log("WebSocket server is running on port 3000");
+  console.log("WebSocket server is running on port " + PORT);
 });
