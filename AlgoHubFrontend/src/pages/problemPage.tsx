@@ -15,7 +15,7 @@ import "ace-builds/src-noconflict/theme-solarized_light";
 
 import axios from "axios";
 import DOMPurify from "dompurify";
-import { type DragEvent, useState } from 'react';
+import { type DragEvent, useEffect, useState } from 'react';
 import AceEditor from 'react-ace';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from "rehype-raw";
@@ -24,14 +24,20 @@ import remarkGfm from "remark-gfm";
 import { useSocket } from "../hooks/useSocket";
 
 
-function Description({ text }: { text: string }) {
+function Description({ text, userStub }: { text: string, userStub?: string }) {
   const sanitizedText = DOMPurify.sanitize(text);
   const [activeTab, setActiveTab] = useState('statement');
   const [leftWidth, setLeftWidth] = useState(50); // Controls split layout
   const [isDragging, setIsDragging] = useState(false); // Track dragging state - Prevents resizing when mouse isn’t pressed
-  const [language, setlanguage] = useState('javascript');
+  const [language, setlanguage] = useState('java');
   const [theme, settheme] = useState('monokai');
-  const [code, setcode] = useState('');
+  const [code, setcode] = useState(userStub || '');
+  
+  useEffect(() => {
+  if (userStub !== undefined) {
+    setcode(userStub);
+  }
+}, [userStub]);
 
   const { evaluationResult, isLoading } = useSocket();
   // Handler for submission button
@@ -124,9 +130,9 @@ function Description({ text }: { text: string }) {
         <div className="flex flex-wrap gap-2">
           <select className="select select-primary w-auto max-w-xs" value={language} onChange={(e) => setlanguage(e.currentTarget.value)}>
             <option disabled>Select Language</option>
+            <option value="java">Java</option>
             <option value="javascript">JavaScript</option>
             <option value="python">Python</option>
-            <option value="java">Java</option>
             <option value="c_cpp">C++</option>
           </select>
 
@@ -165,8 +171,8 @@ function Description({ text }: { text: string }) {
 
       <div className="collapse bg-base-200 rounded-xl my-4">
         <input type="checkbox" className="peer" /> 
-        <div className="collapse-title bg-primary text-3xl align-middle text-center text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
-          {isLoading ? 'Loading...' : (evaluationResult ? `Status: ${evaluationResult.evaluationResult.status}` : 'Results')}
+        <div className="collapse-title bg-amber-600 text-3xl align-middle text-center text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+          {isLoading ? 'Loading...' : (evaluationResult ? `Status: ${evaluationResult.status}` : 'Results')}
         </div>
         <div className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content"> 
           {evaluationResult ? (
@@ -175,16 +181,9 @@ function Description({ text }: { text: string }) {
               
               <div className="bg-base-300 p-4 rounded-lg">
                 <h3 className="text-lg font-bold mb-2">Status</h3>
-                <p className={`text-xl font-bold ${evaluationResult.evaluationResult.status === 'SUCCESS' ? 'text-green-400' : 'text-red-400'}`}>
-                  {evaluationResult.evaluationResult.status}
+                <p className={`text-xl font-bold ${evaluationResult.status === 'SUCCESS' ? 'text-green-400' : 'text-red-400'}`}>
+                  {evaluationResult.status}
                 </p>
-              </div>
-
-              <div className="bg-base-300 p-4 rounded-lg">
-                <h3 className="text-lg font-bold mb-2">Output</h3>
-                <pre className="bg-neutral text-white p-3 rounded overflow-auto max-h-52">
-                  {evaluationResult.evaluationResult.output || 'No output'}
-                </pre>
               </div>
             </div>
           ) : (

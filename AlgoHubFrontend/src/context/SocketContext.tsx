@@ -6,10 +6,8 @@ type SocketContextType = {
   isConnected: boolean;
   isLoading: boolean;
   evaluationResult?: {
-    evaluationResult:{
-      output: string;
-      status: string;
-    },
+    output: string;
+    status: string;
     userId: string;
     submissionId: string;
   }

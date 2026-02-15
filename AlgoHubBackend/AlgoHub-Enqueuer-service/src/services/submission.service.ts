@@ -32,24 +32,24 @@ class SubmissionService {
     }
 
     const reply  = await submissionProducer({
-      [submission._id]: {
+      [submission.submissionId]: {
         code: submission.code,
         language: submission.language,
         TestCases: problemApiResponse.data.testCases[0],
         userId: userId,
-        submissionId: submission._id,
+        submissionId: submission.submissionId,
       } // for now we are sending only the first test case, this can be modified to send all test cases or a selected set of test cases
     });
     console.log("Submission enqueued:", reply);
     return {queueResponse: reply, submission};
   }
 
-  async updateSubmission(id: string, data: any){
-    const updatedSubmission = await this.submissionRepository.updateSubmission(id, data);
+  async updateSubmissionStatus(id: string, status: string){
+    const updatedSubmission = await this.submissionRepository.updateSubmissionStatus(id, status);
     if(!updatedSubmission){
-      throw new SubmissionCreationError(`Failed to update submission with ID ${id}`);
+      throw new SubmissionCreationError(`Failed to update submission status for ID ${id}`);
     }
-    return updatedSubmission; 
+    return updatedSubmission;
   }
 }
 

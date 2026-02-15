@@ -1,5 +1,8 @@
 const express = require('express');
 const bodyparser = require('body-parser');
+const cors = require('cors');
+require('dotenv').config();
+const { FRONTEND_URL } = require('./config/server.config');
 
 const { PORT} = require('./config/server.config');
 const {errorHandler} = require('./utils');
@@ -9,6 +12,11 @@ const logger = require('./config/logger.config');
 
 
 const app = express();
+
+app.use(cors({
+  origin: [FRONTEND_URL],
+  credentials: true
+}));
 
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
