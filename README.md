@@ -1,6 +1,6 @@
 # 🚀 AlgoHub : Code Submission & Evaluation Platform
 
-A scalable, distributed code execution platform where users can solve **DSA and programming problems**, submit solutions, and receive real-time evaluation results.
+**AlgoHub** is a scalable, distributed code submission and evaluation platform where users can solve DSA and programming problems, submit solutions, and receive real-time evaluation results.
 
 This system is designed using a **microservices architecture** with queue-based communication and isolated Docker-based code execution for safety and scalability.
 
@@ -9,11 +9,11 @@ This system is designed using a **microservices architecture** with queue-based 
 
 AlgoHub emphasizes:
 
-- Microservice-based backend architecture
-- Queue-driven asynchronous job processing
-- Secure Docker-based execution of untrusted code
-- Real-time updates using WebSockets (Socket.IO)
-- Clean service separation and scalability
+- **Microservice-based** backend architecture
+- **Queue-driven asynchronous job processing**
+- **Secure Docker-based execution** of untrusted code
+- **Real-time updates** using WebSockets (Socket.IO)
+- Clean service separation and **scalability**
 
 The frontend exists mainly to:
 - Trigger submissions
@@ -113,17 +113,6 @@ The frontend exists purely to:
 - Timeout enforcement
 - No direct DB access from execution container
 - Controlled runtime environments
-
----
-
-## 🎯 What This Project Demonstrates
-
-- Real-world backend system design
-- Asynchronous distributed processing
-- Secure sandboxed execution
-- Microservice communication
-- Queue-based scaling strategy
-- Event-driven architecture using WebSockets
 
 ---
 
