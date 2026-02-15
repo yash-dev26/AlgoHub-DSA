@@ -30,6 +30,7 @@ io.on("connection", (socket) => {
 });
 
 app.post("/senddata",  async(req, res) => {
+  console.log("Received data to send: ", req.body);
   const { userId, data } = req.body; 
   if (!userId || !data) {
     return res.status(400).json({ error: "Missing userId or data in request body" });

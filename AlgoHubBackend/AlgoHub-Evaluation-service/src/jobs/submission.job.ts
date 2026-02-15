@@ -3,6 +3,7 @@ import { IJob } from '../types/bullmqJob.type';
 import logger from '../config/winston.config';
 import { SubmissionPayload } from '../types/submission-payload.type';
 import createEvaluator from '../utils/EvaluatorFactory';
+import evaluationProducer from '../producer/evaluation.producer';
 
 export default class SubmissionJob implements IJob {
   name: string;
@@ -30,12 +31,19 @@ export default class SubmissionJob implements IJob {
       const codeEvaluation = await createEvaluator(
         submission.language,
         submission.code,
-        submission.input,
+        submission.TestCases,
       );
-      const evaluationResult = await codeEvaluation.evaluate(submission.code, submission.input);
+      const evaluationResult = await codeEvaluation.evaluate(submission.code, submission.TestCases);
       logger.info(`Evaluation result for job ${job.id}: ${JSON.stringify(evaluationResult)}`, {
         source: 'jobs/submission.job.ts',
       });
+
+      evaluationProducer({
+        evaluationResult,
+        userId: submission.userId,
+        submissionId: submission.submissionId,
+      });
+
       if (evaluationResult.status === 'SUCCESS') {
         logger.info(`Job ${job.id} completed successfully. Output: ${evaluationResult.output}`, {
           source: 'jobs/submission.job.ts',

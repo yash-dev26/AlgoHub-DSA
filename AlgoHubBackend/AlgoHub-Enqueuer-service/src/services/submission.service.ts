@@ -1,7 +1,6 @@
 import submissionProducer from "../producer/submission.producer.js";
 import SubmissionCreationError from "../errors/submission.error.js";
 import { fetchProblemData } from "../apis/problemServiceApi.js";
-import test from "node:test";
 
 class SubmissionService {
 
@@ -14,8 +13,10 @@ class SubmissionService {
   async createSubmission(data: any){
 
     const problemId = data.problemId;
+    const userId = data.userId;
 
     const problemApiResponse = await fetchProblemData(problemId);
+
 
     if(!problemApiResponse || !problemApiResponse.data){
       throw new SubmissionCreationError(`Problem with ID ${problemId} not found in Problem Service`);
@@ -35,6 +36,8 @@ class SubmissionService {
         code: submission.code,
         language: submission.language,
         testCases: problemApiResponse.data.testCases[0],
+        userId: userId,
+        submissionId: submission._id,
       } // for now we are sending only the first test case, this can be modified to send all test cases or a selected set of test cases
     });
     console.log("Submission enqueued:", reply);

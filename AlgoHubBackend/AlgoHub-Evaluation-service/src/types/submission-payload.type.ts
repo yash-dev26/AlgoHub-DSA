@@ -1,7 +1,9 @@
 import { TestCase } from './testcases.type';
 
 export type SubmissionPayload = {
-  language: 'Python' | 'Java' | 'CPP';
   code: string;
-  input?: TestCase;
+  language: 'Python' | 'Java' | 'CPP';
+  TestCases?: TestCase;
+  userId: string;
+  submissionId: string;
 };
