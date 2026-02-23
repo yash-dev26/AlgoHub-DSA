@@ -1,9 +1,15 @@
 import { TestCase } from './testcases.type';
 
 export default interface EvaluatorStrategy {
-  evaluate(code: string, inputTestCase?: TestCase): Promise<EvaluatorResponse>;
+  evaluate(code: string, testCases?: TestCase[]): Promise<EvaluatorResponse>;
 
   // eslint-disable-next-line semi
 }
 
-export type EvaluatorResponse = { output: string; status: string };
+export type TestCaseResult = {
+  output: string;
+  status: 'SUCCESS' | 'WA' | 'ERROR';
+  testCaseIndex: number;
+};
+
+export type EvaluatorResponse = { results: TestCaseResult[] };

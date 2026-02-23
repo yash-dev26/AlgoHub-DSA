@@ -40,6 +40,13 @@ function Description({ text, userStub }: { text: string, userStub?: string }) {
 }, [userStub]);
 
   const { evaluationResult, isLoading } = useSocket();
+  const aggregatedStatus = evaluationResult?.results?.length
+    ? (evaluationResult.results.every((result) => result.status === 'SUCCESS')
+      ? 'SUCCESS'
+      : (evaluationResult.results.find((result) => result.status !== 'SUCCESS')?.status ?? 'UNKNOWN'))
+    : evaluationResult?.status;
+
+  const isSubmissionSuccess = aggregatedStatus === 'SUCCESS';
   // Handler for submission button
   const handleSubmission = async () => {
 
@@ -172,7 +179,7 @@ function Description({ text, userStub }: { text: string, userStub?: string }) {
       <div className="collapse bg-base-200 rounded-xl my-4">
         <input type="checkbox" className="peer" /> 
         <div className="collapse-title bg-amber-600 text-3xl align-middle text-center text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
-          {isLoading ? 'Loading...' : (evaluationResult ? `Status: ${evaluationResult.status}` : 'Results')}
+          {isLoading ? 'Loading...' : (evaluationResult ? `Status: ${aggregatedStatus ?? 'UNKNOWN'}` : 'Results')}
         </div>
         <div className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content"> 
           {evaluationResult ? (
@@ -181,8 +188,8 @@ function Description({ text, userStub }: { text: string, userStub?: string }) {
               
               <div className="bg-base-300 p-4 rounded-lg">
                 <h3 className="text-lg font-bold mb-2">Status</h3>
-                <p className={`text-xl font-bold ${evaluationResult.status === 'SUCCESS' ? 'text-green-400' : 'text-red-400'}`}>
-                  {evaluationResult.status}
+                <p className={`text-xl font-bold ${isSubmissionSuccess ? 'text-green-400' : 'text-red-400'}`}>
+                  {aggregatedStatus ?? 'UNKNOWN'}
                 </p>
               </div>
             </div>

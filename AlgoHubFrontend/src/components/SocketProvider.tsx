@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { io, type Socket } from "socket.io-client";
 
-import { SocketContext } from "../context/SocketContext";
+import { type EvaluationResult,SocketContext } from "../context/SocketContext";
  
 const ioServerUrl = import.meta.env.VITE_SOCKET_SERVICE_URL || "http://localhost:3000";
  
@@ -15,7 +15,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [evaluationResult, setevaluationResult] = useState(null);
+  const [evaluationResult, setevaluationResult] = useState<EvaluationResult | undefined>(undefined);
  
   useEffect(() => {
     const newSocket = createSocketConnection();

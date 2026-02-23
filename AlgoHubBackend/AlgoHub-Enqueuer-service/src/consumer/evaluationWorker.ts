@@ -30,6 +30,7 @@ function evaluationWorker(queueName: string) {
       
       if (job.name === "EvaluationJob") {
         console.log(`Processing job ${job.id} with data:`, job.data);
+        console.log(`job.data.evaluationResult:`, job.data.evaluationResult);
         if (job.data?.submissionId) {
           const status = mapEvaluationStatus(job.data?.evaluationResult?.status);
           await submissionService.updateSubmissionStatus(job.data.submissionId, status);

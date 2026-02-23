@@ -1,11 +1,6 @@
 import EvaluatorStrategy from '../types/EvaluatorStrategy';
-import { TestCase } from '../types/testcases.type';
 
-export default function createEvaluator(
-  codeLanguage: string,
-  code: string,
-  inputTestCase?: TestCase,
-): EvaluatorStrategy {
+export default function createEvaluator(codeLanguage: string): EvaluatorStrategy {
   if (codeLanguage === 'cpp') {
     const CppEvaluator = require('../container/cpp.container').default;
     return new CppEvaluator();

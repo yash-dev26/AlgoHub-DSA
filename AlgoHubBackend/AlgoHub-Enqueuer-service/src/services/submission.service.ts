@@ -35,10 +35,10 @@ class SubmissionService {
       [submission.submissionId]: {
         code: submission.code,
         language: submission.language,
-        TestCases: problemApiResponse.data.testCases[0],
+        TestCases: problemApiResponse.data.testCases,
         userId: userId,
         submissionId: submission.submissionId,
-      } // for now we are sending only the first test case, this can be modified to send all test cases or a selected set of test cases
+      }
     });
     console.log("Submission enqueued:", reply);
     return {queueResponse: reply, submission};

@@ -4,11 +4,21 @@ import { JAVA_IMAGE } from '../utils/constants';
 import logger from '../config/winston.config';
 import decodeBufferStream from '../utils/bufferDecoder';
 import pullImage from '../utils/dockerImgPull';
-import EvaluatorStrategy from '../types/EvaluatorStrategy';
-import { EvaluatorResponse } from '../types/EvaluatorStrategy';
+import EvaluatorStrategy, { EvaluatorResponse, TestCaseResult } from '../types/EvaluatorStrategy';
 
 class JavaEvaluator implements EvaluatorStrategy {
-  async evaluate(code: string, inputTestCase?: TestCase): Promise<EvaluatorResponse> {
+  async evaluate(code: string, testCases?: TestCase[]): Promise<EvaluatorResponse> {
+    if (!Array.isArray(testCases) || testCases.length === 0) {
+      return { results: [] };
+    }
+
+    const runCommands = testCases
+      .map(
+        (testCase, index) =>
+          `echo "=== TestCase ${index} ===" && echo '${testCase.input.replace(/'/g, "'\\''")}' | java Main`,
+      )
+      .join(' ; ');
+
     const rawBuffer: Buffer[] = [];
     await pullImage(JAVA_IMAGE);
     const javaDockerContainer = await createContainer(JAVA_IMAGE, [
@@ -18,8 +28,7 @@ class JavaEvaluator implements EvaluatorStrategy {
     cat <<'EOF' > Main.java
 ${code}
 EOF
-    javac Main.java &&
-    echo "${inputTestCase?.input ?? ''}" | java Main
+    javac Main.java && ${runCommands}
   `,
     ]);
 
@@ -38,6 +47,8 @@ EOF
       rawBuffer.push(chunk);
     });
 
+    const results: TestCaseResult[] = [];
+
     try {
       const result: string = await new Promise(async (res, rej) => {
         const timeoutId = setTimeout(() => {
@@ -50,7 +61,7 @@ EOF
             });
             rej(new Error('TLE'));
           });
-        }, 3000); // 3 seconds time limit for code execution
+        }, 3000 * testCases.length); // Scale timeout by number of test cases
 
         (await loggerStream).on('end', async () => {
           clearTimeout(timeoutId); // clear the timeout if execution finishes within time limit
@@ -71,24 +82,55 @@ EOF
             rej(new Error(decodedStream.stderr));
           } else {
             res(decodedStream.stdout);
-            logger.info(`Decoded stdout: ${decodedStream.stdout}`, {
-              source: 'container/java.container.ts',
-            });
           }
         });
       });
-      if (result.trim() === inputTestCase?.output?.trim()) {
-        return { output: result, status: 'SUCCESS' };
-      } else {
-        return { output: result, status: 'WA' };
-      }
+
+      this.parseAndCompareResults(result, testCases, results);
+
+      return { results };
     } catch (error) {
-      return { output: error as string, status: 'ERROR' };
+      logger.error(`Java evaluation error: ${error}`, { source: 'container/java.container.ts' });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return {
+        results: testCases.map((_, index) => ({
+          output: errorMessage,
+          status: 'ERROR',
+          testCaseIndex: index,
+        })),
+      };
     } finally {
       await javaDockerContainer.remove({ force: true }); //cleaning up the container
       logger.info('Java Docker container removed.', {
         source: 'container/java.container.ts',
       });
+    }
+  }
+
+  private parseAndCompareResults(
+    output: string,
+    testCases: TestCase[],
+    results: TestCaseResult[],
+  ): void {
+    const sections = output.split(/=== TestCase \d+ ===/);
+
+    for (let i = 1; i < sections.length; i++) {
+      const testCaseOutput = sections[i].trim();
+      const expectedOutput = testCases[i - 1].output.trim();
+
+      if (testCaseOutput === expectedOutput) {
+        results.push({
+          output: testCaseOutput,
+          status: 'SUCCESS',
+          testCaseIndex: i - 1,
+        });
+      } else {
+        results.push({
+          output: testCaseOutput,
+          status: 'WA',
+          testCaseIndex: i - 1,
+        });
+      }
     }
   }
 }
