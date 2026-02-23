@@ -116,11 +116,5 @@ The frontend exists purely to:
 
 ---
 
-## 🚀 Future Enhancements
-
-- Frontend enhancements
-- Contest mode
-- Plagiarism detection
-
 
 > Built for scalable, secure, and real-time code evaluation.
