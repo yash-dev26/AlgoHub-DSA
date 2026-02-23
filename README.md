@@ -5,24 +5,8 @@
 This system is designed using a **microservices architecture** with queue-based communication and isolated Docker-based code execution for safety and scalability.
 
 ---
-## 🧠 Project Focus
 
-AlgoHub emphasizes:
-
-- **Microservice-based** backend architecture
-- **Queue-driven asynchronous job processing**
-- **Secure Docker-based execution** of untrusted code
-- **Real-time updates** using WebSockets (Socket.IO)
-- Clean service separation and **scalability**
-
-The frontend exists mainly to:
-- Trigger submissions
-- Display code stubs
-- Show real-time evaluation updates
-
----
-
-## 🧠 Overview
+# 🧠 Overview
 
 The platform allows:
 
@@ -55,6 +39,22 @@ The platform allows:
 11. The Submission Service updates the submission record in the database with the evaluation result.  
 12. The Submission Service notifies the WebSocket Service about the updated submission status.  
 13. The WebSocket Service pushes the execution result/status update to the client via the active socket connection.  
+
+---
+## 🧠 Project Focus
+
+AlgoHub emphasizes:
+
+- **Microservice-based** backend architecture
+- **Queue-driven asynchronous job processing**
+- **Secure Docker-based execution** of untrusted code
+- **Real-time updates** using WebSockets (Socket.IO)
+- Clean service separation and **scalability**
+
+The frontend exists mainly to:
+- Trigger submissions
+- Display code stubs
+- Show real-time evaluation updates
 
 ---
 
