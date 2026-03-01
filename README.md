@@ -35,7 +35,7 @@ AlgoHub/
     │   └── Receives submissions, stores metadata, and enqueues evaluation jobs.
     │
     ├── AlgoHub-Evaluation-service/
-    │   └── Executes code against test cases and publishes evaluation results.
+    │   └── Executes code in docker containers, runs it against test cases and publishes evaluation results.
     │
     ├── AlgoHub-Problem-Service/
     │   └── Manages problem statements, test cases, and related problem data APIs.
