@@ -56,22 +56,13 @@ EOF
             source: 'container/java.container.ts',
           });
           javaDockerContainer.stop().then(() => {
-            logger.info('Java Docker container stopped.', {
-              source: 'container/java.container.ts',
-            });
             rej(new Error('TLE'));
           });
         }, 3000 * testCases.length); // Scale timeout by number of test cases
 
         (await loggerStream).on('end', async () => {
           clearTimeout(timeoutId); // clear the timeout if execution finishes within time limit
-          logger.info('Java Docker container logs stream ended.', {
-            source: 'container/java.container.ts',
-          });
           const completeBuffer = Buffer.concat(rawBuffer); // concatenate all chunks into a single buffer
-          logger.info(`Raw buffer length: ${completeBuffer.length}`, {
-            source: 'container/java.container.ts',
-          });
           // rawBuffer is of no use here, we gotta decode it to string
           // Decoding the buffer stream to get stdout and stderr
           const decodedStream = decodeBufferStream(completeBuffer);

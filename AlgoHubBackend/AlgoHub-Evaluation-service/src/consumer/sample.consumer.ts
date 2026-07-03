@@ -9,16 +9,10 @@ export default function SampleWorker(queueName: string) {
   const worker = new Worker<IJob, IBullmqWorkerResponse>(
     queueName,
     async (job: Job): Promise<IBullmqWorkerResponse> => {
-      logger.info(`Worker received job: ${job.name}, id: ${job.id}`, {
-        source: 'consumer/sample.consumer.ts',
-      });
       try {
         if (job.name === 'SampleJob') {
           const sampleJobInstance = new SampleJob(job.data);
           await sampleJobInstance.handler(job);
-          logger.info(`Job processed successfully: ${job.id}`, {
-            source: 'consumer/sample.consumer.ts',
-          });
           return { success: true, statusCode: 200, message: 'Job processed successfully' };
         }
         logger.warn(`Unsupported job type: ${job.name}`, { source: 'consumer/sample.consumer.ts' });
@@ -44,6 +38,5 @@ export default function SampleWorker(queueName: string) {
     }),
   );
 
-  logger.info(`Worker started for queue: ${queueName}`, { source: 'consumer/sample.consumer.ts' });
   return worker;
 }

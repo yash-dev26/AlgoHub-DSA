@@ -124,6 +124,15 @@ flowchart TD
 
 ---
 
+# 🎥 Project Demo
+
+**A complete walkthrough of the workflow and live code execution is available here:**
+
+[![Watch the Demo](https://img.shields.io/badge/Watch-Demo-red?style=for-the-badge&logo=youtube)](https://youtu.be/A7Ndz_8rat0)
+
+**Video:** https://youtu.be/A7Ndz_8rat0
+
+
 ---
 
 # ⚙️ Project Setup & Backend Details
@@ -152,30 +161,31 @@ AlgoHub emphasizes:
 - **Real-time updates** using WebSockets (Socket.IO)
 - Clean service separation and **scalability**
 
-The frontend exists mainly to:
-- Trigger submissions
-- Display code stubs
-- Show real-time evaluation updates
-
 ---
 
-## 🖥️ Frontend (Minimal but Functional)
+## 🖥️ Frontend
 
-Although backend-focused, a React frontend has been built to demonstrate integration:
+While the primary focus of this project is the backend architecture, a modern React frontend has been developed to provide a complete end-to-end experience.
 
-- Only **one exposed submission route**
-- One **hardcoded problem**
-- Problem fetched via proxy admin service call to DB
-- Code stub logic implemented
-- Real-time submission status updates via Socket.IO
-- Clean UI for testing backend functionality
+### Features
 
-The frontend exists purely to:
-- Simulate real user submissions
-- Demonstrate WebSocket-based live updates
-- Showcase the full execution lifecycle
+* Browse available coding problems
+* Monaco Editor with language selection
+* Dynamic code templates (stubs) for each language
+* Submit solutions for execution
+* Real-time submission status updates via Socket.IO
+* View verdicts, execution results, and test case outcomes
+* Responsive and clean UI built for demonstration and testing
 
----
+The frontend serves as a client for the backend microservices, allowing users to:
+
+* Interact with the complete code execution pipeline
+* Experience live updates without page refreshes
+* Validate end-to-end communication between services
+* Demonstrate the backend architecture through a production-like interface
+
+> **Note:** The frontend is intentionally lightweight, as the project's primary objective is to showcase the backend microservices architecture, asynchronous job processing, Docker-based code execution, and real-time communication.
+
 
 ## ⚙️ Tech Stack
 
@@ -217,8 +227,4 @@ The frontend exists purely to:
 
 ---
 
-## Future Enhancements
-- Add CI/CD pipelines to automate build, test, and deployment for all services.
-
-
-> Built for scalable, secure, and real-time code evaluation.
+> Thanks for checking out AlgoHub!

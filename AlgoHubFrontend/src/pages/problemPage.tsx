@@ -142,7 +142,6 @@ function ResultPanel({
 function ProblemPage() {
   const { problemId } = useParams<{ problemId: string }>();
   const navigate = useNavigate();
-  const problemServiceUrl = import.meta.env.VITE_PROBLEM_SERVICE_URL;
   const enqueuerServiceUrl = import.meta.env.VITE_ENQUEUE_SERVICE_URL;
   const [problemData, setProblemData] = useState<ProblemApiData | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -156,6 +155,13 @@ function ProblemPage() {
   const [code, setCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // Because Ace Editor uses different mode names than our language identifiers, we need a mapping.
+  const ACE_MODE_MAP: Record<string, string> = {
+  java: "java",
+  python: "python",
+  cpp: "c_cpp",
+  };
+
   const { evaluationResult, isLoading: socketLoading } = useSocket();
 
   useEffect(() => {
@@ -167,7 +173,7 @@ function ProblemPage() {
         setFetchLoading(true);
         setFetchError(null);
         const res = await axios.get<{ data: ProblemApiData }>(
-          `${problemServiceUrl}/api/v1/problems/${problemId}`,
+          `${enqueuerServiceUrl}/api/v1/problems/${problemId}`,
           { signal: controller.signal }
         );
         const data = res.data?.data ?? (res.data as unknown as ProblemApiData);
@@ -200,7 +206,7 @@ function ProblemPage() {
   // Update stub when language changes
   useEffect(() => {
     if (!problemData?.codeStub) return;
-    const stub = problemData.codeStub.find((s) => s.language === language)?.userStub ?? "/*This language is not supported yet.*\/";
+    const stub = problemData.codeStub.find((s) => s.language === language)?.userStub ?? "/*This language is not supported yet.*/";
     setCode(stub);
   }, [language, problemData]);
 
@@ -357,7 +363,7 @@ function ProblemPage() {
             >
               <option value="java">Java</option>
               <option value="python">Python</option>
-              <option value="c_cpp">C++</option>
+              <option value="cpp">C++</option>
             </select>
 
             <select
@@ -380,7 +386,7 @@ function ProblemPage() {
         {/* Editor */}
         <div className="flex-1 overflow-hidden">
           <AceEditor
-            mode={language}
+            mode={ACE_MODE_MAP[language] ?? "text"}
             theme={theme}
             value={code}
             onChange={(val: string) => setCode(val)}

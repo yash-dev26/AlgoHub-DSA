@@ -9,10 +9,10 @@ const {errorHandler} = require('./utils');
 const apiRouter = require('./routes');
 const connectToDatabase = require('./config/db.config');
 const logger = require('./config/logger.config');
+const seedIfNeeded = require('./seed/seed');
 
 
 const app = express();
-console.log("FRONTEND_URL =", FRONTEND_URL);
 app.use(cors({
   origin: FRONTEND_URL,
   credentials: true
@@ -35,6 +35,7 @@ app.listen(PORT, async () => {
     try{
         await connectToDatabase();
         logger.info('Connected to the database');
+        await seedIfNeeded();
     } catch(err){
         logger.error('Database connection failed', err);
         // rethrow so the process can crash if DB is critical

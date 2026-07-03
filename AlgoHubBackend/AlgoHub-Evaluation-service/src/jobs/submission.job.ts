@@ -23,13 +23,7 @@ export default class SubmissionJob implements IJob {
         logger.warn('SubmissionJob: empty payload', { source: 'jobs/submission.job.ts' });
         return;
       }
-      const [key, submission] = entries[0];
-      // const inputTestCase = this.payload[key].input?.input;
-      // const outputTestCase = this.payload[key].input?.output;
-      logger.info(`Processing submission for key: ${key}, language: ${submission.language}`, {
-        source: 'jobs/submission.job.ts',
-      });
-      logger.info(`Submission code: ${submission.code}`, { source: 'jobs/submission.job.ts' });
+      const [, submission] = entries[0];
       const normalizedTestCases = this.normalizeTestCases(submission.TestCases);
 
       logger.info(`Test cases: ${JSON.stringify(normalizedTestCases)}`, {

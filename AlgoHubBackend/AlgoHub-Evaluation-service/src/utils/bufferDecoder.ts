@@ -1,4 +1,3 @@
-import logger from '../config/winston.config';
 import DockerOutput from '../types/dockerOutput.type';
 import { STREAM_HEADER_SIZE } from './constants';
 
@@ -6,9 +5,6 @@ export default function decodeBufferStream(buffer: Buffer): DockerOutput {
   let offset = 0; // keep track of the current position in the buffer
   const output: DockerOutput = { stdout: '', stderr: '' }; // to store decoded strings
   // iterate through the buffer
-  logger.info(`Decoding buffer stream. Total buffer length: ${buffer.length}`, {
-    source: 'utils/bufferDecoder.ts',
-  });
   while (offset < buffer.length) {
     const streamType = buffer[offset]; // first byte indicates the channel (stdout or stderr)
 

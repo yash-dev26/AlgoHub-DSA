@@ -9,7 +9,6 @@ const pingCheck = async (_request: FastifyRequest, reply: FastifyReply) => {
 }
 
 const createSubmission = async (request: FastifyRequest, reply: FastifyReply) => {
-  console.log('Received submission:', request.body);
   const validation = await createSubmissionZodSchema.safeParseAsync(request.body);
   if (!validation.success) {
     return reply.status(400).send({

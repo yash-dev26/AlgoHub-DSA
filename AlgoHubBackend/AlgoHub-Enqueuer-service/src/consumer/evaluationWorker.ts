@@ -53,25 +53,18 @@ function evaluationWorker(queueName: string) {
     async (job: Job) => {
       
       if (job.name === "EvaluationJob") {
-        console.log(`Received job ${job.id} with name ${job.name}`);
-        console.log(`Processing job ${job.id} with data:`, job.data);
-        console.log(`job.data.evaluationResult:`, job.data.evaluationResult);
         if (job.data?.submissionId) {
           const status = deriveSubmissionStatus(job.data?.evaluationResult?.results);
-          console.log(`Mapped evaluation status: ${status}`);
           await submissionService.updateSubmissionStatus(job.data.submissionId, status);
         }
-        console.log(`Updated submission status for job ${job.id} to ${deriveSubmissionStatus(job.data?.evaluationResult?.results)}`);
 
-        console.log(`Sending response to socket service for job ${job.id} with data:`, job.data);
-        const response = await axios.post(
+        await axios.post(
           `${process.env.SOCKET_SERVICE_URL}/senddata`,
           {
             userId: job.data.userId,
             data: job.data,
           }
         );
-        console.log(`Job ${job.id} processed successfully with response:`, response.data);
       }
   },{
     connection: redisClient,

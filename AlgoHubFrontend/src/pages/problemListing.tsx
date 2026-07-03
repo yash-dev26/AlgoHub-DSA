@@ -103,7 +103,7 @@ function ProblemList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const problemServiceUrl = import.meta.env.VITE_PROBLEM_SERVICE_URL;
+  const enqueuerServiceUrl = import.meta.env.VITE_ENQUEUE_SERVICE_URL;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -114,8 +114,8 @@ function ProblemList() {
         setError(null);
 
         // Try the env-based URL first, fall back to the vite proxy
-        const baseUrl = problemServiceUrl
-          ? `${problemServiceUrl}/api/v1/problems`
+        const baseUrl = enqueuerServiceUrl
+          ? `${enqueuerServiceUrl}/api/v1/problems`
           : '/api/v1/problems';
 
         const res = await axios.get<{ data: RawProblem[] }>(baseUrl, {
@@ -140,7 +140,7 @@ function ProblemList() {
 
     void fetchProblems();
     return () => controller.abort();
-  }, [problemServiceUrl]);
+  }, [enqueuerServiceUrl]);
 
   return (
     <div className="min-h-screen py-8 px-4">

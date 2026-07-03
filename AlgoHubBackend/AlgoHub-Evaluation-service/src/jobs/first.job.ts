@@ -13,10 +13,6 @@ export default class SampleJob implements IJob {
 
   handler = (job?: Job): void => {
     if (job) {
-      logger.info(
-        `Handling job: ${job.name}, id: ${job.id}, payload: ${JSON.stringify(job.data)}`,
-        { source: 'jobs/first.job.ts' },
-      );
     }
   };
 

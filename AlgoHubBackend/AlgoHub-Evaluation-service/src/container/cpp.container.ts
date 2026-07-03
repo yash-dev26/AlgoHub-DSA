@@ -56,22 +56,13 @@ EOF
             source: 'container/cpp.container.ts',
           });
           cppDockerContainer.stop().then(() => {
-            logger.info('C++ Docker container stopped.', {
-              source: 'container/cpp.container.ts',
-            });
             rej(new Error('TLE'));
           });
         }, 2000 * testCases.length); // Scale timeout by number of test cases
 
         (await loggerStream).on('end', async () => {
           clearTimeout(timeoutId); // clear the timeout if execution finishes within time limit
-          logger.info('C++ Docker container logs stream ended.', {
-            source: 'container/cpp.container.ts',
-          });
           const completeBuffer = Buffer.concat(rawBuffer); // concatenate all chunks into a single buffer
-          logger.info(`Raw buffer length: ${completeBuffer.length}`, {
-            source: 'container/cpp.container.ts',
-          });
           // rawBuffer is of no use here, we gotta decode it to string
           // Decoding the buffer stream to get stdout and stderr
           const decodedStream = decodeBufferStream(completeBuffer);

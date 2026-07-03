@@ -7,7 +7,6 @@ class ProblemService {
     }
 
     async  createProblem(problemData){
-        logger.info('ProblemService.createProblem - sanitizing description');
         problemData.description = sanitizeMarkdown(problemData.description);
 
         const problem = await this.problemRepository.createProblem(problemData);

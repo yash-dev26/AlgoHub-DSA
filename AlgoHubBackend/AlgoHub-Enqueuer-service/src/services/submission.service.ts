@@ -11,7 +11,6 @@ class SubmissionService {
   }
 
   async createSubmission(data: any){
-    console.log('Creating submission with data:', data);
     const problemId = data.problemId;
     const userId = data.userId;
 
@@ -40,7 +39,6 @@ class SubmissionService {
         submissionId: submission.submissionId,
       }
     });
-    console.log("Submission enqueued:", reply);
     return {queueResponse: reply, submission};
   }
 

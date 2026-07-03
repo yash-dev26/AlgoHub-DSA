@@ -6,7 +6,6 @@ const {Problem} = require('../models');
 class ProblemRepository {
     async createProblem(problemData){
         try{
-            logger.info('ProblemRepository.createProblem - creating problem');
             const problem = await Problem.create({
                 title: problemData.title,
                 description: problemData.description,
@@ -25,7 +24,6 @@ class ProblemRepository {
 
     async getAllProblems(){
         try{
-            logger.info('ProblemRepository.getAllProblems - querying all problems');
             const problems = await Problem.find({});
             return problems;
 
@@ -37,7 +35,6 @@ class ProblemRepository {
 
     async getProblem(id){
         try{
-            logger.info(`ProblemRepository.getProblem - id: ${id}`);
             const problem = await Problem.findById(id);
             if(!problem){
                 throw new NotFound('Problem', id);

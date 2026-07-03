@@ -9,13 +9,11 @@ export default async function pullImage(imageName: string) {
         docker.modem.followProgress(
           stream,
           (err, response) => (err ? rej(err) : res(response)),
-          (event) => {
-            console.log(event.status);
-          },
+          () => undefined,
         );
       });
     });
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }

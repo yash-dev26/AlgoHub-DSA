@@ -51,6 +51,7 @@ docker-compose up --build
 
 > ⚠️ Requires Docker to be running locally, since AlgoHub-Evaluation-service spawns containers to execute submitted code.
 
+> 🌱 Automatic Database Seeding – On first startup, the Problem Service automatically populates an empty MongoDB database with sample coding problems, enabling contributors to start using AlgoHub without manual setup.
 This will:
 - Build and start all four microservices
 - Wire up the shared Docker network for inter-service communication
