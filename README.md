@@ -4,7 +4,7 @@
 
 This system is designed using a **microservices architecture** with queue-based communication and isolated Docker-based code execution for safety and scalability.
 
-> Relevant terminal outputs and log screenshots have been added below for reference. These provide clear visibility into the execution flow and results.
+> Scroll down to watch the demo video for a full walkthrough of the execution flow and results.
 
 ---
 
